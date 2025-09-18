@@ -6,12 +6,19 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     :root{
-      --bg:#0f0f10; --panel:#161616; --muted:#9ea1a4; --accent:#4caf50; --orange:#ff9800; --card:#1c1c1c;
-      --text:#e9eef2;
+      --bg:#0f0f10; --panel:#161616; --muted:#9ea1a4; --accent:#4caf50; --card:#1c1c1c; --text:#e9eef2;
+      --tritanium:#ffeb3b;    /* amarillo */
+      --pyerite:#ff9800;      /* naranja */
+      --nocxium:#6f6f74;      /* gris oscuro */
+      --mexallon:#a7f432;     /* verde lima */
+      --megacyte:#c0c0c8;     /* plata claro */
+      --isogen:#00b0ff;       /* azul eléctrico */
+      --morphite:#b3002d;     /* ruby (rojo) */
+      --zydrine:#00c27a;      /* verde esmeralda brillante */
+      --default-raw:#d0d0d0;
     }
     html,body{height:100%; margin:0; background:var(--bg); color:var(--text); font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;}
     .app{box-sizing:border-box; padding:18px; display:flex; flex-direction:column; gap:16px; min-height:100vh;}
-    /* layout: desktop splits, small stacks */
     .cols{display:flex; gap:16px;}
     .left,.right{background:var(--panel); border:1px solid #222; border-radius:8px; padding:14px; box-sizing:border-box;}
     .left{flex:1 1 50%; min-width:320px;}
@@ -22,36 +29,44 @@
     button.primary:hover{background:#3f8b3f}
     .pilot-controls{width:100%; margin-top:12px;}
     .pilot-row{display:flex; gap:8px; align-items:center; margin-bottom:8px;}
-    .pilot-row input[type=number]{width:120px; padding:8px; border-radius:6px; border:1px solid #2b2b2b; background:var(--card); color:var(--text);}
+    .pilot-row input[type=number], .pilot-row input[type=text]{width:140px; padding:8px; border-radius:6px; border:1px solid #2b2b2b; background:var(--card); color:var(--text);}
     .pilot-row label{flex:1; font-size:14px;}
     .pilot-actions{display:flex; gap:8px; align-items:center;}
     .small{font-size:13px; color:var(--muted);}
-    table{width:100%; border-collapse:collapse; margin-top:12px;}
-    th,td{border:1px solid #222; padding:8px; text-align:left; font-size:13px;}
-    th{background:#111;}
     .summary{width:100%; margin-top:12px; font-weight:600; font-size:14px;}
     ul.quality{list-style:none; padding:0; margin:0;}
     ul.quality li{padding:6px 0;}
     .green{color:var(--accent);}
     .orange{color:var(--orange);}
     .muted{color:var(--muted);}
-    /* responsive behaviour: if viewport narrower than 1920 stack, else two columns */
-    @media (min-width:1920px){
-      .cols{flex-direction:row;}
-      .left{order:0}
-      .right{order:1}
-      .left textarea{min-height:calc(100vh - 220px);}
-    }
-    @media (max-width:1919px){
-      .cols{flex-direction:column;}
-      .left{order:0}
-      .right{order:1}
-      .centerButton{order:1}
-    }
+    .results-box{width:100%; max-width:1100px;}
+    .mineral-list{list-style:none; padding:0; margin:0;}
+    .mineral-item{padding:10px; border:1px solid #212121; margin-bottom:8px; border-radius:6px; background:#121212;}
+    .mineral-header{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+    .mineral-name{font-weight:700; color:var(--text); margin-right:8px;}
+    .variant-prefix{opacity:0.9; margin-right:6px; color:var(--muted);}
+    .mini{font-size:13px; color:var(--muted);}
+    .raw-list{margin-top:8px; display:flex; gap:12px; flex-wrap:wrap;}
+    .raw-item{background:#161616; border:1px solid #222; padding:6px 8px; border-radius:6px; font-size:13px; color:var(--default-raw);}
+    .raw-tritanium{color:var(--tritanium); font-weight:700;}
+    .raw-pyerite{color:var(--pyerite); font-weight:700;}
+    .raw-nocxium{color:var(--nocxium); font-weight:700;}
+    .raw-mexallon{color:var(--mexallon); font-weight:700;}
+    .raw-megacyte{color:var(--megacyte); font-weight:700;}
+    .raw-isogen{color:var(--isogen); font-weight:700;}
+    .raw-morphite{color:var(--morphite); font-weight:700;}
+    .raw-zydrine{color:var(--zydrine); font-weight:700;}
+    .global-raw{display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;}
+    .global-raw .raw-item{background:#232323;}
+    @media (min-width:1920px){ .cols{flex-direction:row;} .left textarea{min-height:calc(100vh - 220px);} }
+    @media (max-width:1919px){ .cols{flex-direction:column;} }
     .controls-row{display:flex; gap:8px; flex-wrap:wrap; align-items:center;margin-top:8px;}
     .btn-ghost{background:transparent;border:1px solid #333;color:var(--text);padding:6px 10px;border-radius:6px;cursor:pointer;}
     .btn-danger{background:#8b2b2b;border:none;color:white;padding:6px 10px;border-radius:6px;cursor:pointer;}
     .meta{font-size:13px;color:var(--muted);margin-top:8px;}
+    .pilot-table{width:100%; margin-top:12px; border-collapse:collapse;}
+    .pilot-table th, .pilot-table td{border:1px solid #222; padding:6px;}
+    .hint{font-size:12px;color:var(--muted); margin-top:8px;}
   </style>
 </head>
 <body>
@@ -62,7 +77,7 @@
         <h3 style="margin:0 0 8px 0">Pega tu escaneo</h3>
         <textarea id="scanInput" placeholder="Pega aquí el escaneo. Ejemplo:
 Augmented Eifyrium    29.000    464.000 m3    31 km
-Bistot    30.000    480.000 m3    32 km
+Boosted Eifyrium    28.000    448.000 m3    37 km
 ..."></textarea>
 
         <div class="centerButton" style="margin-top:10px;">
@@ -77,66 +92,72 @@ Bistot    30.000    480.000 m3    32 km
             <button class="btn-ghost" id="removePilotBtn">➖ Quitar piloto</button>
             <div class="small" style="margin-left:auto">Total rendimiento: <span id="totalRate">—</span> m³/min</div>
           </div>
-          <div class="meta">Cada piloto tiene su campo m³/min. Por defecto 4 pilotos a 1500 m³/min.</div>
+          <div class="meta">Cada piloto tiene nombre editable y m³/min. Por defecto 4 pilotos a 1500 m³/min.</div>
+          <div class="hint">Edita refineMap en el script para ajustar yields por unidad de ore.</div>
         </div>
       </div>
 
       <div class="right" id="rightPanel">
-        <div id="resultsContainer" style="width:100%; max-width:1100px;"></div>
+        <div id="resultsContainer" class="results-box"></div>
       </div>
     </div>
   </div>
 
   <script>
-    // --- Configurables (ajusta precios/ratios aquí) ---
+    /**************************************************************************
+     * Mapeos configurables: refineMap define yields por unidad de ore
+     **************************************************************************/
+    const refineMap = {
+      'Bistot':   { 'Tritanium': 0.0,  'Pyerite': 0.0,   'Mexallon': 0.2,  'Nocxium': 0.05, 'Zydrine': 0.01 },
+      'Eifyrium': { 'Tritanium': 0.05, 'Pyerite': 0.0,   'Mexallon': 0.3,  'Nocxium': 0.08, 'Isogen': 0.02 },
+      'Hezorime': { 'Tritanium': 0.02, 'Pyerite': 0.0,   'Mexallon': 0.25, 'Nocxium': 0.07, 'Zydrine': 0.03 },
+      // añade más ores si es necesario
+    };
+
     const compressionRatios = { 'Bistot':0.01, 'Eifyrium':0.01, 'Hezorime':0.01 };
     const compressedPrices = { 'Bistot':8000, 'Eifyrium':12000, 'Hezorime':9500 };
 
-    // --- util: limpiar y normalizar ---
-    function normalizeName(name){
-      return name.replace(/^(Augmented|Boosted|Cubic|Doped|Dull|Sharp|Serrated|Monoclinic|Triclinic)\s+/i,'').trim();
-    }
+    // Utils y parseo
+    function normalizeName(name){ return name.replace(/^(Augmented|Boosted|Cubic|Doped|Dull|Sharp|Serrated|Monoclinic|Triclinic)\s+/i,'').trim(); }
+    function extractVariant(name){ const m = name.match(/^(Augmented|Boosted|Cubic|Doped|Dull|Sharp|Serrated|Monoclinic|Triclinic)\b/i); return m ? m[0] : ''; }
     function classifyQuality(name){
       if(/^(Augmented|Boosted|Serrated|Sharp)/i.test(name)) return 'Muy bueno';
       if(/^(Cubic|Doped|Monoclinic|Triclinic)/i.test(name)) return 'Bueno';
       return 'Normal';
     }
 
-    // --- parsing robusto por línea ---
     function parseScan(text){
       if(!text) return [];
       const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length>0);
       const ores = [];
       for(const line of lines){
-        // intenta capturar: nombre [espacios dobles] cantidad [espacios] volumen m3 [espacios] distancia km
-        // split por 2+ espacios o tab
         const parts = line.split(/\s{2,}|\t/).map(p=>p.trim()).filter(p=>p!=='');
-        if(parts.length < 3){
-          // fallback: split por espacios y reconstruir
+        let rawName='', qtyRaw='0', volRaw='0', distRaw='';
+        if(parts.length>=3){
+          rawName = parts[0];
+          qtyRaw = parts[1];
+          volRaw = parts[2];
+          distRaw = parts[3] || '';
+        } else {
           const tokens = line.split(/\s+/);
-          // heurística: distancia termina en km
-          let distTok = tokens[tokens.length-1];
-          let volTok = tokens[tokens.length-2];
-          let qtyTok = tokens[tokens.length-3];
-          const nameTok = tokens.slice(0,tokens.length-3).join(' ');
-          parts.length=0;
-          parts.push(nameTok, qtyTok, volTok, distTok);
-        } else if(parts.length===3){
-          // quizá falta distancia, ignóralo
-          parts.push('');
+          if(tokens.length>=4){
+            rawName = tokens.slice(0,tokens.length-3).join(' ');
+            qtyRaw = tokens[tokens.length-3];
+            volRaw = tokens[tokens.length-2];
+            distRaw = tokens[tokens.length-1];
+          } else continue;
         }
-        // Normalizar números: aceptar 29.000 o 29,000 o 29000 etc.
-        const rawName = parts[0];
-        const qtyRaw = parts[1] || '0';
-        const volRaw = parts[2] || '0';
-        const distRaw = parts[3] || '';
         const qty = parseFloat(qtyRaw.replace(/\./g,'').replace(/,/g,'.')) || 0;
-        // volumen puede venir "464.000 m3" o "464000 m3"
         const volNum = parseFloat((volRaw||'').replace(/[^\d,\.]/g,'').replace(/\./g,'').replace(/,/g,'.')) || 0;
         const distNum = parseFloat((distRaw||'').replace(/[^\d,\.]/g,'').replace(/\./g,'').replace(/,/g,'.')) || 0;
+        const variant = extractVariant(rawName);
+        const base = normalizeName(rawName);
         ores.push({
-          name: rawName,
-          baseName: normalizeName(rawName),
+          rawName,
+          variant,
+          base,
+          labelVariant: variant ? variant : 'Normal',
+          fullLabel: (variant ? variant : 'Normal') + ' ' + base,
           quality: classifyQuality(rawName),
           quantity: qty,
           volume: volNum,
@@ -146,84 +167,96 @@ Bistot    30.000    480.000 m3    32 km
       return ores;
     }
 
-    function compressVolume(ore){
-      const ratio = compressionRatios[ore.baseName] || 0;
-      // Si ratio 0 significa que no se comprime (o desconocido) -> usar volumen/1000? aquí usamos quantity*ratio per spec
-      return ore.quantity * ratio;
-    }
-    function estimatePrice(ore){
-      const per = compressedPrices[ore.baseName] || 0;
-      return compressVolume(ore) * per;
-    }
+    function compressVolume(ore){ const ratio = compressionRatios[ore.base] || 0; return ore.quantity * ratio; }
+    function estimatePrice(ore){ const per = compressedPrices[ore.base] || 0; return compressVolume(ore) * per; }
 
-    // --- Pilotos management ---
+    // Pilots UI
     const pilotListEl = document.getElementById('pilotList');
     const totalRateEl = document.getElementById('totalRate');
-    function createPilotRow(value){
+
+    function createPilotRow(name='', rate=1500){
       const wrapper = document.createElement('div');
       wrapper.className = 'pilot-row';
-      const index = pilotListEl.children.length + 1;
       wrapper.innerHTML = `
-        <label>Piloto ${index}: <input type="number" class="pilot-rate" value="${value}" min="1" /></label>
+        <label style="flex:1"><input type="text" class="pilot-name" value="${escapeAttr(name||'Piloto')}" style="width:140px; padding:6px; margin-right:8px;" /> </label>
+        <label class="small">m³/min <input type="number" class="pilot-rate" value="${rate}" min="1" /></label>
         <div class="pilot-actions">
-          <button class="btn-ghost btn-copy" title="Copiar este valor">Copiar</button>
+          <button class="btn-ghost btn-copy" title="Copiar valor">Copiar</button>
         </div>
       `;
-      // acciones
       wrapper.querySelector('.btn-copy').addEventListener('click', ()=> {
-        const v = wrapper.querySelector('input').value;
+        const v = wrapper.querySelector('.pilot-rate').value;
         navigator.clipboard?.writeText(v).catch(()=>{});
       });
-      wrapper.querySelector('input').addEventListener('input', updateTotalRate);
+      wrapper.querySelector('.pilot-rate').addEventListener('input', updateTotalRate);
       return wrapper;
     }
-    function addPilot(value=1500){
-      pilotListEl.appendChild(createPilotRow(value));
-      refreshPilotLabels();
+
+    function addPilot(name='Piloto', rate=1500){
+      pilotListEl.appendChild(createPilotRow(name, rate));
+      refreshPilotNames();
       updateTotalRate();
     }
     function removePilot(){
       if(pilotListEl.children.length>1) pilotListEl.removeChild(pilotListEl.lastElementChild);
-      refreshPilotLabels();
+      refreshPilotNames();
       updateTotalRate();
     }
-    function refreshPilotLabels(){
+    function refreshPilotNames(){
       Array.from(pilotListEl.children).forEach((row,i)=>{
-        const lbl = row.querySelector('label');
-        if(lbl) lbl.childNodes[0].textContent = `Piloto ${i+1}: `;
+        const nameInput = row.querySelector('.pilot-name');
+        if(!nameInput.value) nameInput.value = `Piloto ${i+1}`;
       });
     }
-    function getTotalRate(){
-      let total=0;
-      const inputs = pilotListEl.querySelectorAll('input.pilot-rate');
-      inputs.forEach(i=> total += (parseFloat(i.value)||0));
-      return total;
+    function getPilotData(){
+      const rows = Array.from(pilotListEl.children);
+      return rows.map((row,i)=>{
+        const name = row.querySelector('.pilot-name').value || `Piloto ${i+1}`;
+        const rate = parseFloat(row.querySelector('.pilot-rate').value) || 0;
+        return { name, rate };
+      });
     }
-    function updateTotalRate(){
-      totalRateEl.textContent = getTotalRate().toLocaleString();
-    }
+    function getTotalRate(){ return getPilotData().reduce((s,p)=>s+p.rate,0); }
+    function updateTotalRate(){ totalRateEl.textContent = getTotalRate().toLocaleString(); }
 
-    // --- Results render ---
+    // Render
     const resultsContainer = document.getElementById('resultsContainer');
-    function renderResults(html){
-      resultsContainer.innerHTML = html;
-      // scroll to results on small screens
-      if(window.innerWidth < 1200) resultsContainer.scrollIntoView({behavior:'smooth'});
+    function renderResults(html){ resultsContainer.innerHTML = html; if(window.innerWidth < 1200) resultsContainer.scrollIntoView({behavior:'smooth'}); }
+
+    // Raw calc helpers
+    function calcRawFor(item){
+      const map = refineMap[item.base];
+      if(!map) return {};
+      const out = {};
+      Object.keys(map).forEach(rm => { out[rm] = map[rm] * item.quantity; });
+      return out;
+    }
+    function formatNumber(n){
+      const isInt = Math.abs(n - Math.round(n)) < 0.0001;
+      return isInt ? Math.round(n).toLocaleString() : n.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+    }
+    function rawClassFor(name){
+      const n = (name || '').toLowerCase();
+      if(n === 'tritanium') return 'raw-tritanium';
+      if(n === 'pyerite') return 'raw-pyerite';
+      if(n === 'nocxium' || n === 'noxcium' || n === 'nocx') return 'raw-nocxium';
+      if(n === 'mexallon' || n.includes('mexall')) return 'raw-mexallon';
+      if(n === 'megacyte' || n.includes('megacyt')) return 'raw-megacyte';
+      if(n === 'isogen' || n.includes('isog')) return 'raw-isogen';
+      if(n === 'morphite' || n.includes('morph')) return 'raw-morphite';
+      if(n === 'zydrine' || n.includes('zydr')) return 'raw-zydrine';
+      return '';
     }
 
     function processScan(){
       const text = document.getElementById('scanInput').value;
       const ores = parseScan(text);
-      if(ores.length===0){
-        renderResults(`<div class="muted">No hay datos para procesar.</div>`);
-        return;
-      }
-      // aggregates
-      let totalVolume = 0;
-      let totalCompressed = 0;
-      let totalPrice = 0;
-      const byName = {};
+      if(ores.length===0){ renderResults(`<div class="muted">No hay datos para procesar.</div>`); return; }
+
+      const byLabel = {};
+      let totalVolume = 0, totalCompressed = 0, totalPrice = 0;
       const qualityStats = { 'Muy bueno':{volume:0,price:0}, 'Bueno':{volume:0,price:0}, 'Normal':{volume:0,price:0} };
+      const globalRawTotals = {};
 
       ores.forEach(o=>{
         totalVolume += o.volume;
@@ -232,40 +265,55 @@ Bistot    30.000    480.000 m3    32 km
         totalCompressed += comp;
         totalPrice += price;
 
-        // aggregate by baseName
-        const key = o.baseName || o.name;
-        if(!byName[key]) byName[key] = { baseName:key, entries:[], quantity:0, volume:0, compressed:0, price:0, quality:o.quality };
-        byName[key].entries.push(o);
-        byName[key].quantity += o.quantity;
-        byName[key].volume += o.volume;
-        byName[key].compressed += comp;
-        byName[key].price += price;
+        const key = o.fullLabel;
+        if(!byLabel[key]) byLabel[key] = { label:o.fullLabel, base:o.base, variant:o.variant ? o.variant : 'Normal', quantity:0, volume:0, compressed:0, price:0, quality:o.quality, rawBreakdown: {} };
+        byLabel[key].quantity += o.quantity;
+        byLabel[key].volume += o.volume;
+        byLabel[key].compressed += comp;
+        byLabel[key].price += price;
 
-        // quality totals
-        if(!qualityStats[o.quality]) qualityStats[o.quality] = {volume:0,price:0};
+        const rawForLine = calcRawFor(o);
+        Object.keys(rawForLine).forEach(rm=>{
+          byLabel[key].rawBreakdown[rm] = (byLabel[key].rawBreakdown[rm] || 0) + rawForLine[rm];
+          globalRawTotals[rm] = (globalRawTotals[rm] || 0) + rawForLine[rm];
+        });
+
         qualityStats[o.quality].volume += o.volume;
         qualityStats[o.quality].price += price;
       });
 
-      // table header
-      let html = `<div style="width:100%"><table><thead><tr>
-        <th>Mineral</th><th>Cantidad</th><th>Volumen total</th><th>Comprimido (cubos)</th><th>Precio estimado</th><th>Calidad</th>
-      </tr></thead><tbody>`;
+      // Build HTML list
+      let html = `<div><h3>Desglose simplificado (Variante + Mineral)</h3><ul class="mineral-list">`;
+      Object.values(byLabel).forEach(item=>{
+        const variantText = item.variant === 'Normal' ? 'Normal' : item.variant;
+        const display = `${variantText} <strong>${escape(item.base)}</strong>`;
+        const qualityBadge = item.quality==='Muy bueno' ? '<span class="green">🟩 Muy bueno</span>' : item.quality==='Bueno' ? '<span class="orange">🟧 Bueno</span>' : '<span class="muted">⚪ Normal</span>';
 
-      Object.values(byName).forEach(b=>{
-        html += `<tr>
-          <td>${escapeHtml(b.baseName)}</td>
-          <td>${b.quantity.toLocaleString()}</td>
-          <td>${b.volume.toLocaleString()} m³</td>
-          <td>${b.compressed.toLocaleString()} m³</td>
-          <td>${Math.round(b.price).toLocaleString()} ISK</td>
-          <td class="${b.quality==='Muy bueno'?'green': b.quality==='Bueno'?'orange':'muted'}">${b.quality}</td>
-        </tr>`;
+        html += `<li class="mineral-item">
+          <div class="mineral-header">
+            <div style="flex:1">${display}</div>
+            <div class="mini">${qualityBadge}</div>
+          </div>
+          <div class="mini" style="margin-top:8px;">
+            Cantidad: <strong>${item.quantity.toLocaleString()}</strong> · Volumen: <strong>${item.volume.toLocaleString()} m³</strong> · Comprimido: <strong>${item.compressed.toLocaleString()} m³</strong> · ISK estimado: <strong>${Math.round(item.price).toLocaleString()} ISK</strong>
+          </div>`;
+
+        if(Object.keys(item.rawBreakdown).length>0){
+          html += `<div class="raw-list">`;
+          Object.keys(item.rawBreakdown).forEach(rm=>{
+            const cls = rawClassFor(rm);
+            html += `<div class="raw-item ${cls}">${escape(rm)}: <strong>${formatNumber(item.rawBreakdown[rm])}</strong></div>`;
+          });
+          html += `</div>`;
+        } else {
+          html += `<div class="mini" style="margin-top:8px;color:#a0a0a0">No hay mapa de conversión para <strong>${escape(item.base)}</strong>. Añádelo en refineMap del script.</div>`;
+        }
+
+        html += `</li>`;
       });
+      html += `</ul>`;
 
-      html += `</tbody></table>`;
-
-      // summary and timings
+      // Totals
       const totalRate = getTotalRate() || 1;
       const timeMinutes = totalVolume / totalRate;
       html += `<div class="summary">
@@ -275,16 +323,57 @@ Bistot    30.000    480.000 m3    32 km
         Tiempo estimado de minado: <strong>${timeMinutes.toFixed(1)}</strong> minutos (Rendimiento total: ${totalRate.toLocaleString()} m³/min)
       </div>`;
 
-      // quality breakdown with percentages
-      html += `<div class="summary" style="margin-top:12px;"><h4 style="margin:6px 0">Desglose por calidad</h4>
-        <ul class="quality">
-          ${renderQualityLine('Muy bueno', qualityStats['Muy bueno'], totalVolume, totalPrice)}
-          ${renderQualityLine('Bueno', qualityStats['Bueno'], totalVolume, totalPrice)}
-          ${renderQualityLine('Normal', qualityStats['Normal'], totalVolume, totalPrice)}
-        </ul>
-      </div>`;
+      // Quality breakdown
+      html += `<div class="summary" style="margin-top:12px;"><h4 style="margin:6px 0">Desglose por calidad</h4><ul class="quality">
+        ${renderQualityLine('Muy bueno', qualityStats['Muy bueno'], totalVolume, totalPrice)}
+        ${renderQualityLine('Bueno', qualityStats['Bueno'], totalVolume, totalPrice)}
+        ${renderQualityLine('Normal', qualityStats['Normal'], totalVolume, totalPrice)}
+      </ul></div>`;
 
+      // Per-pilot breakdown
+      const pilots = getPilotData();
+      html += `<div class="summary" style="margin-top:12px;"><h4 style="margin:6px 0">Desglose por piloto (según rendimiento)</h4>
+        <table class="pilot-table"><thead><tr><th>Piloto</th><th>m³/min</th><th>Participación</th><th>Volumen minado estimado</th><th>ISK estimado</th></tr></thead><tbody>`;
+      pilots.forEach(p=>{
+        const totalRateVal = getTotalRate() || 1;
+        const share = totalRateVal>0 ? (p.rate / totalRateVal) : 0;
+        const vol = totalVolume * share;
+        const isk = Math.round(totalPrice * share);
+        html += `<tr>
+          <td>${escape(p.name)}</td>
+          <td>${p.rate.toLocaleString()} m³/min</td>
+          <td>${(share*100).toFixed(2)}%</td>
+          <td>${vol.toLocaleString()} m³</td>
+          <td>${isk.toLocaleString()} ISK</td>
+        </tr>`;
+      });
+      html += `</tbody></table></div>`;
+
+      // Global raw totals (ordered)
+      html += `<div class="summary" style="margin-top:12px;"><h4 style="margin:6px 0">Totales de raw minerals</h4>`;
+      if(Object.keys(globalRawTotals).length>0){
+        html += `<div class="global-raw">`;
+        const order = ['Tritanium','Pyerite','Nocxium','Mexallon','Megacyte','Isogen','Morphite','Zydrine'];
+        const seen = new Set();
+        order.forEach(k=>{
+          if(globalRawTotals[k] !== undefined){
+            const cls = rawClassFor(k);
+            html += `<div class="raw-item ${cls}">${escape(k)}: <strong>${formatNumber(globalRawTotals[k])}</strong></div>`;
+            seen.add(k);
+          }
+        });
+        Object.keys(globalRawTotals).forEach(k=>{
+          if(!seen.has(k)){
+            const cls = rawClassFor(k);
+            html += `<div class="raw-item ${cls}">${escape(k)}: <strong>${formatNumber(globalRawTotals[k])}</strong></div>`;
+          }
+        });
+        html += `</div>`;
+      } else {
+        html += `<div class="mini">No se han generado raw minerals (añade mappings en refineMap).</div>`;
+      }
       html += `</div>`;
+
       renderResults(html);
     }
 
@@ -298,28 +387,41 @@ Bistot    30.000    480.000 m3    32 km
       return `<li class="${cls}">${icon} ${name}: ${vol.toLocaleString()} m³ (${volPct.toFixed(1)}%) → ${Math.round(price).toLocaleString()} ISK (${pricePct.toFixed(1)}%)</li>`;
     }
 
-    function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function escape(s){ return (s+'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function escapeAttr(s){ return (s+'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
-    // --- Bind UI ---
-    document.getElementById('addPilotBtn').addEventListener('click', ()=>addPilot(1500));
+    // UI bindings
+    document.getElementById('addPilotBtn').addEventListener('click', ()=>addPilot('Piloto',1500));
     document.getElementById('removePilotBtn').addEventListener('click', removePilot);
     document.getElementById('runBtn').addEventListener('click', processScan);
 
-    // init 4 pilotos por defecto
-    for(let i=0;i<4;i++) addPilot(1500);
+    // Pilot helpers
+    function getPilotData(){ return Array.from(pilotListEl.children).map((row,i)=>({ name: row.querySelector('.pilot-name').value||`Piloto ${i+1}`, rate: parseFloat(row.querySelector('.pilot-rate').value)||0 })); }
+    function getTotalRate(){ return getPilotData().reduce((s,p)=>s+p.rate,0); }
+    function updateTotalRate(){ totalRateEl.textContent = getTotalRate().toLocaleString(); }
 
-    // update total rate on load
+    function createPilotRowSimple(name='', rate=1500){
+      const wrapper = document.createElement('div');
+      wrapper.className = 'pilot-row';
+      wrapper.innerHTML = `
+        <label style="flex:1"><input type="text" class="pilot-name" value="${escapeAttr(name||'Piloto')}" style="width:140px; padding:6px; margin-right:8px;" /> </label>
+        <label class="small">m³/min <input type="number" class="pilot-rate" value="${rate}" min="1" /></label>
+        <div class="pilot-actions"><button class="btn-ghost btn-copy">Copiar</button></div>
+      `;
+      wrapper.querySelector('.btn-copy').addEventListener('click', ()=> navigator.clipboard?.writeText(wrapper.querySelector('.pilot-rate').value).catch(()=>{}));
+      wrapper.querySelector('.pilot-rate').addEventListener('input', updateTotalRate);
+      return wrapper;
+    }
+    function addPilot(name='Piloto', rate=1500){ pilotListEl.appendChild(createPilotRowSimple(name, rate)); refreshPilotNames(); updateTotalRate(); }
+    function removePilot(){ if(pilotListEl.children.length>1) pilotListEl.removeChild(pilotListEl.lastElementChild); refreshPilotNames(); updateTotalRate(); }
+    function refreshPilotNames(){ Array.from(pilotListEl.children).forEach((r,i)=>{ const n=r.querySelector('.pilot-name'); if(!n.value) n.value=`Piloto ${i+1}`; }); }
+
+    // init 4 pilotos
+    addPilot('Alpha',1500); addPilot('Bravo',1500); addPilot('Charlie',1500); addPilot('Delta',1500);
     updateTotalRate();
 
-    // adjust layout on resize: if width >=1920 keep two columns (handled by CSS), else stack (handled by CSS)
-    window.addEventListener('resize', ()=>{ /* no-op: CSS handles layout */ });
-
-    // allow paste with ctrl+v focus
-    document.getElementById('scanInput').addEventListener('keydown', (e)=>{
-      if(e.ctrlKey && e.key.toLowerCase()==='enter'){
-        processScan();
-      }
-    });
+    // shortcut Ctrl+Enter
+    document.getElementById('scanInput').addEventListener('keydown', e=>{ if(e.ctrlKey && e.key.toLowerCase()==='enter') processScan(); });
   </script>
 </body>
 </html>
