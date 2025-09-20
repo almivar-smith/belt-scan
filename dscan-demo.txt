@@ -1,0 +1,125 @@
+Augmented Eifyrium    29.000    464.000 m3    31 km
+Boosted Eifyrium    28.000    448.000 m3    37 km
+Boosted Eifyrium    32.000    512.000 m3    27 km
+Doped Eifyrium    40.000    640.000 m3    37 km
+Doped Eifyrium    50.000    800.000 m3    33 km
+Dull Hezorime    103.638    518.190 m3    35 km
+Dull Hezorime    113.311    566.555 m3    35 km
+Dull Hezorime    124.317    621.585 m3    33 km
+Dull Hezorime    135.752    678.760 m3    34 km
+Dull Hezorime    148.948    744.740 m3    28 km
+Dull Hezorime    162.671    813.355 m3    30 km
+Dull Hezorime    171.363    856.815 m3    30 km
+Eifyrium    43.000    688.000 m3    28 km
+Eifyrium    47.000    752.000 m3    29 km
+Eifyrium    60.000    960.000 m3    27 km
+Hezorime    107.356    536.780 m3    33 km
+Hezorime    112.190    560.950 m3    23 km
+Hezorime    117.534    587.670 m3    40 km
+Hezorime    123.170    615.850 m3    29 km
+Hezorime    131.085    655.425 m3    34 km
+Hezorime    138.582    692.910 m3    32 km
+Hezorime    157.127    785.635 m3    35 km
+Hezorime    169.173    845.865 m3    32 km
+Hezorime    182.021    910.105 m3    25 km
+Hezorime    195.536    977.680 m3    26 km
+Hezorime    214.127    1.070.635 m3    31 km
+Serrated Hezorime    101.629    508.145 m3    33 km
+Serrated Hezorime    131.260    656.300 m3    30 km
+Serrated Hezorime    67.141    335.705 m3    29 km
+============================================================
+Augmented Eifyrium    29.000    464.000 m3    31 km
+Boosted Eifyrium    28.000    448.000 m3    37 km
+Boosted Eifyrium    32.000    512.000 m3    27 km
+Doped Eifyrium    40.000    640.000 m3    37 km
+Doped Eifyrium    50.000    800.000 m3    33 km
+Dull Hezorime    103.638    518.190 m3    35 km
+Dull Hezorime    113.311    566.555 m3    35 km
+Dull Hezorime    124.317    621.585 m3    33 km
+Dull Hezorime    135.752    678.760 m3    34 km
+Dull Hezorime    148.948    744.740 m3    28 km
+Dull Hezorime    162.671    813.355 m3    30 km
+Dull Hezorime    171.363    856.815 m3    30 km
+Eifyrium    43.000    688.000 m3    28 km
+Eifyrium    47.000    752.000 m3    29 km
+Eifyrium    60.000    960.000 m3    27 km
+Hezorime    107.356    536.780 m3    33 km
+Hezorime    112.190    560.950 m3    23 km
+Hezorime    117.534    587.670 m3    40 km
+Hezorime    123.170    615.850 m3    29 km
+Hezorime    131.085    655.425 m3    34 km
+Hezorime    138.582    692.910 m3    32 km
+Hezorime    157.127    785.635 m3    35 km
+Hezorime    169.173    845.865 m3    32 km
+Hezorime    182.021    910.105 m3    25 km
+Hezorime    195.536    977.680 m3    26 km
+Hezorime    214.127    1.070.635 m3    31 km
+Serrated Hezorime    101.629    508.145 m3    33 km
+Serrated Hezorime    131.260    656.300 m3    30 km
+Serrated Hezorime    67.141    335.705 m3    29 km
+=====================================================
+Ambrosial Nocxite    93.337    373.348 m3    34 km
+Fragrant Nocxite    106.438    425.752 m3    33 km
+Fragrant Nocxite    107.425    429.700 m3    36 km
+Fragrant Nocxite    113.294    453.176 m3    32 km
+Fragrant Nocxite    121.814    487.256 m3    30 km
+Fragrant Nocxite    128.541    514.164 m3    28 km
+Fragrant Nocxite    140.317    561.268 m3    33 km
+Fragrant Nocxite    99.420    397.680 m3    36 km
+Hedbergite    55.210    165.630 m3    31 km
+Intoxicating Nocxite    73.171    292.684 m3    32 km
+Intoxicating Nocxite    77.526    310.104 m3    33 km
+Intoxicating Nocxite    84.726    338.904 m3    30 km
+Intoxicating Nocxite    88.447    353.788 m3    34 km
+Nocxite    102.692    410.768 m3    32 km
+Nocxite    110.560    442.240 m3    30 km
+Nocxite    120.299    481.196 m3    30 km
+Nocxite    128.844    515.376 m3    30 km
+Nocxite    136.181    544.724 m3    34 km
+Nocxite    143.300    573.200 m3    32 km
+Nocxite    154.259    617.036 m3    35 km
+Nocxite    165.074    660.296 m3    33 km
+Nocxite    175.670    702.680 m3    34 km
+Nocxite    187.746    750.984 m3    31 km
+Nocxite    212.875    851.500 m3    34 km
+=======================================================
+Arkonor	1.600	25.600 m3	31 km
+Arkonor	146	2.336 m3	43 km
+Arkonor	188	3.008 m3	41 km
+Arkonor	2.400	38.400 m3	44 km
+Arkonor	342	5.472 m3	22 km
+Arkonor	922	14.752 m3	36 km
+Bistot	1.272	20.352 m3	39 km
+Bistot	1.394	22.304 m3	28 km
+Bistot	2.600	41.600 m3	37 km
+Bistot	2.800	44.800 m3	31 km
+Bistot	3.000	48.000 m3	43 km
+=======================================================
+Dark Glitter 131 13.1008 m3 	27 km
+Dark Glitter 55 55.688 m3 	10 km
+Gelidus 85 85.088 m3 17 km
+Gelidus 96 96.688 m3 4.888 m3
+Gelidus 98 98.688 m3 8.032 m3
+Glare Crust. 162 102.000 m3 	13 km
+Glare Crust. 109 109.000 m3 	12 km
+Glare Crust. 120 120.000 m3 	28 km
+Glare Crust. 143 143.000 m3 	22 km
+Glare Crust. 151 151.000 m3 18 km
+Glare Crust. 81 81.888 m3 20 km
+Glare Crust. 89 89.688 m3 17 km
+Smooth Gladal Mass 176 176.000 m3 3288 m
+Smooth Gladal Mass 197 197.000 m3 12 km
+Smooth Gladal Mass 212 212.000 m3 29 km
+Smooth Gladal Mass 238 238.000 m3 12 km
+Smooth Gladal Mass 256 254.000 m3 18 km
+Smooth Gladal Mass 296 294.000 m3 17 km
+Smooth Gladal Mass 386 304.000 m3 18 km
+Smooth Gladal Mass 320 321.000 m3 16 km
+Smooth Gladal Mass 330 330.000 m3 14 km
+Smooth Gladal Mass 330 334.000 m3 16 km
+Smooth Gladal Mass 330 334.000 m3 27 km
+Smooth Gladal Mass 335 335.000 m3 36 km
+Smooth Gladal Mass 337 337.000 m3 32 km
+Smooth Gladal Mass 339 339.000 m3 26 km
+Smooth Gladal Mass 347 347.000 m3 35 km
+Smooth Gladal Mass 351 351.000 m3 41 km
